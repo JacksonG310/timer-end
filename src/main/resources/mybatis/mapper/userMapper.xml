@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--声明对应bean的命名空间-->
+<mapper namespace="com.timer.mapper.UserMapper">
+    <resultMap id="SysUserResultMap" type="com.timer.entity.User">
+        <id column="id" property="id" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="email" property="email" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="password" property="password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="user_image" property="userImage" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="token" property="token" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" javaType="java.lang.String" jdbcType="CHAR"/>
+        <result column="nick_name" property="nickName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findAllUsers" resultMap="SysUserResultMap">
+        select * from user
+    </select>
+
+<!--    <select id="findUserByAccount" resultMap="SysUserResultMap">-->
+<!--        SELECT *-->
+<!--        FROM user-->
+<!--        WHERE user.email = #{account}-->
+<!--    </select>-->
+    <select id="login" parameterType="HashMap" resultType="HashMap">
+        SELECT id,
+               mobile AS phone,
+               email
+        FROM user
+        WHERE 1=1
+          <if test="isMobile=true">
+              AND mobile = #{account}
+          </if>
+          <if test="isMobile=false">
+              AND email = #{account}
+          </if>
+        AND password = #{password}
+        LIMIT 1;
+    </select>
+<!--    查找账户是否存在-->
+    <select id="findAccount" parameterType="HashMap" resultType="HashMap">
+        SELECT id,
+               mobile AS phone
+        FROM user
+        WHERE mobile = #{phone}
+        LIMIT 1;
+    </select>
+
+<!--    新增注册用户-->
+    <insert id="register" parameterType="HashMap">
+        INSERT INTO user
+        SET mobile = #{phone},
+            password = #{password},
+            nick_name = #{nickName}
+    </insert>
+</mapper>
