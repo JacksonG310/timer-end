@@ -16,4 +16,19 @@ public class TodoClassifyServiceImp implements TodoClassifyService {
     public HashMap findUserTags(Integer userId) {
         return todoClassifyMapper.findUserTags(userId);
     }
+
+    @Override
+    public int addTag(HashMap params) {
+        int row1 = todoClassifyMapper.addTag(params);
+        HashMap nextParams = new HashMap();
+        nextParams.put("tagId",params.get("tagId"));
+        nextParams.put("creatorId",params.get("creatorId"));
+        int row2 = todoClassifyMapper.updateUserTags(nextParams);
+        return row1 + row2;
+    }
+
+    @Override
+    public int updateTagName(HashMap params) {
+        return todoClassifyMapper.updateTagName(params);
+    }
 }

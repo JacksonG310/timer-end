@@ -22,7 +22,7 @@
 <!--        FROM user-->
 <!--        WHERE user.email = #{account}-->
 <!--    </select>-->
-    <select id="login" parameterType="HashMap" resultType="HashMap">
+    <select id="login" parameterType="HashMap" resultType="HashMap" >
         SELECT id,
                mobile AS phone,
                email

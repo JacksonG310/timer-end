@@ -28,6 +28,7 @@ public class UserController {
         try {
             HashMap params = JSONUtil.parse(loginForm).toBean(HashMap.class);
             HashMap data = userService.login(params);
+
             if(data != null && data.get("id") != null){
                 StpUtil.login(data.get("id"));
                 SaTokenInfo token = StpUtil.getTokenInfo();
@@ -41,6 +42,7 @@ public class UserController {
                 return Result.success(exceptionData);
             }
         }catch(Exception e) {
+            System.out.println(e);
             return Result.error(500,"请求出错");
         }
     }

@@ -5,11 +5,9 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class LoginForm {
+public class UpdateTagNameForm {
     @NotNull
-    String account;
+    private int tagId;
     @NotNull
-    String password;
-    @NotNull
-    Boolean isMobile;
+    private  String title;
 }

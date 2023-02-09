@@ -2,21 +2,61 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.timer.mapper.TodoClassifyMapper">
-   <select id="findUserTags" parameterType="HashMap" resultMap="HashMap">
+<!--    <resultMap id="SysTodoClassifyResultMap" type="com.timer.entity.TodoClassify">-->
+<!--        <id column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>-->
+<!--        <result column="name" jdbcType="VARCHAR" javaType="java.lang.String" />-->
+<!--        <result column="color" jdbcType="VARCHAR" javaType="java.lang.String"/>-->
+<!--        <result column="icon" jdbcType="VARCHAR" javaType="java.lang.String"/>-->
+<!--        <result column="isFold" jdbcType="BOOLEAN" javaType="java.lang.Boolean"/>-->
+<!--        <result column="tagId" jdbcType="INTEGER" javaType="java.lang.Integer"/>-->
+<!--        <result column="creator" jdbcType="INTEGER" javaType="java.lang.Integer"/>-->
+<!--    </resultMap>-->
+   <select id="findUserTags"  resultType="HashMap">
        SELECT
-           u.id,
+           u.id AS userId,
            (
            SELECT
-               GROUP_CONCAT(
-                   concat('[',
-                       JSON_OBJECT(
-                           'id',t.id,
-                           'name',t.name,
-                           'color',t.color),
-                       ']')
+               CONCAT(
+                       '[',
+                       GROUP_CONCAT(
+                               JSON_OBJECT(
+                                       'id',t.id,
+                                       'name',t.name,
+                                       'color',t.color,
+                                        'iconUrl',t.icon
+                                )
+                           ),
+                       ']'
                    )
             FROM todoClassify t
-            WHERE JSON_CONTAINS(u.tags, CONVERT(t.id,CHAR ))) AS tags
-       FROM user u WHERE id=#{userId};
+            WHERE (JSON_CONTAINS(u.tags, CONVERT(t.tagId,CHAR ))) AND (creator = #{userId} OR creator = -1)) AS tags
+       FROM user u WHERE id = #{userId};
    </select>
+   <select id="findAll" resultType="HashMap">
+      SELECT * from todoClassify WHERE id = 1;
+   </select>
+
+    <insert id="addTag" parameterType="HashMap">
+        INSERT INTO todoClassify
+        SET name = #{title},
+            color = #{color},
+            isFold = false,
+            creator = #{creatorId},
+            tagId = #{tagId},
+            icon = #{iconId}
+    </insert>
+    <update id="updateUserTags" parameterType="HashMap">
+        UPDATE user
+        SET tags = JSON_ARRAY_APPEND(IFNULL(tags,JSON_ARRAY()),'$',#{tagId})
+        WHERE id = #{creatorId}
+    </update>
+    <update id="updateTagName" parameterType="HashMap">
+        UPDATE todoClassify
+        SET name = #{title}
+        WHERE id = #{tagId}
+    </update>
+    <delete id="deleteTag" >
+        DELETE FROM todoClassify
+        WHERE id = #{tagId}
+    </delete>
 </mapper>

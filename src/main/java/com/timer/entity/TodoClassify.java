@@ -10,4 +10,5 @@ public class TodoClassify {
     private boolean isFold;
     private int creator;
     private int tagId;
+    private String icon;
 }
