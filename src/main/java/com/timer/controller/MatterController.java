@@ -3,7 +3,9 @@ package com.timer.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.json.JSONUtil;
 import com.timer.controller.form.AddTagForm;
+import com.timer.controller.form.AddTaskForm;
 import com.timer.controller.form.UpdateTagNameForm;
+import com.timer.service.TaskService;
 import com.timer.service.TodoClassifyService;
 import com.timer.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 public class MatterController {
@@ -56,6 +59,35 @@ public class MatterController {
                 throw new Exception("修改失败");
             }
         }catch (Exception e){
+            return Result.error(500,"请求出错");
+        }
+    }
+
+
+    @Autowired
+    private TaskService taskService;
+    @PostMapping("/addTask")
+    public Result addTask (@RequestBody @Valid AddTaskForm addTaskForm){
+        try {
+            HashMap params = JSONUtil.parse(addTaskForm).toBean(HashMap.class);
+            int rows = taskService.addTask(params);
+            if(rows == 1){
+                return Result.success("添加成功");
+            }else{
+                return Result.error(500,"添加失败");
+            }
+        }catch (Exception e){
+            return Result.error(500,"请求出错");
+        }
+    }
+    @GetMapping("/findAllTask")
+    public Result findUserAllTask (@RequestParam("userId") Integer id){
+        System.out.println(id);
+        try {
+            List<HashMap> data = taskService.findUserAllTask(id);
+            return Result.success(data);
+        }catch ( Exception e){
+            System.out.println(e);
             return Result.error(500,"请求出错");
         }
     }
