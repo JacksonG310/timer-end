@@ -9,4 +9,7 @@ import java.util.List;
 public interface TaskService {
     public int addTask(HashMap params);
     public List<HashMap> findUserAllTask(int userId);
+    public  int updateStatus(HashMap params);
+
+    public HashMap findTaskById(HashMap params);
 }

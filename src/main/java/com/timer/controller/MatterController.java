@@ -4,6 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.json.JSONUtil;
 import com.timer.controller.form.AddTagForm;
 import com.timer.controller.form.AddTaskForm;
+import com.timer.controller.form.UpdateStatusForm;
 import com.timer.controller.form.UpdateTagNameForm;
 import com.timer.service.TaskService;
 import com.timer.service.TodoClassifyService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class MatterController {
@@ -82,7 +84,6 @@ public class MatterController {
     }
     @GetMapping("/findAllTask")
     public Result findUserAllTask (@RequestParam("userId") Integer id){
-        System.out.println(id);
         try {
             List<HashMap> data = taskService.findUserAllTask(id);
             return Result.success(data);
@@ -91,4 +92,32 @@ public class MatterController {
             return Result.error(500,"请求出错");
         }
     }
+
+    @PutMapping("/updateStatus")
+    public Result updateStatus (@RequestBody @Valid UpdateStatusForm updateStatusForm){
+        try {
+            HashMap params = JSONUtil.parse(updateStatusForm).toBean(HashMap.class);
+            int rows = taskService.updateStatus(params);
+            if(rows == 1){
+                return Result.success("修改成功");
+            }else{
+                return Result.error(500,"修改失败");
+            }
+        }catch (Exception e){
+            System.out.println(e);
+            return Result.error(500,"请求出错");
+        }
+    }
+
+    @GetMapping("/findTaskById")
+    public Result findTaskById(@RequestParam HashMap params){
+        try {
+          HashMap task = taskService.findTaskById(params);
+            return Result.success(task);
+        }catch ( Exception e){
+            System.out.println(e);
+            return Result.error(500,"请求出错");
+        }
+    }
+
 }

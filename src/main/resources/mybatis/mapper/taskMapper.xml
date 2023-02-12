@@ -13,11 +13,29 @@
             updated,
             remark,
             finishTime,
-            finishState,
+            finishStatus,
             creator,
             startTime,
-            endTime
+            endTime,
+            title
         FROM task WHERE creator = #{userId}
+        ORDER BY status ASC, created DESC;
+    </select>
+    <select id="findTaskById" parameterType="HashMap" resultType="HashMap">
+        SELECT id,
+               classifyId,
+               status,
+               importance,
+               created,
+               updated,
+               remark,
+               finishTime,
+               finishStatus,
+               creator,
+               startTime,
+               endTime,
+               title
+        FROM task WHERE creator = #{userId} AND id = #{taskId}
     </select>
     <insert id="addTask" parameterType="HashMap">
         INSERT INTO task
@@ -29,6 +47,15 @@
             remark = #{remark},
             creator = #{creator},
             startTime = #{from},
-            endTime = #{to}
+            endTime = #{to},
+            title = #{title}
     </insert>
+    <update id="updateStatus" parameterType="HashMap">
+        UPDATE task
+        SET status = #{status},
+            finishTime = #{finishTime},
+            finishStatus = #{finishStatus},
+            updated = #{updated}
+        WHERE id = #{taskId} AND creator = #{userId}
+    </update>
 </mapper>
