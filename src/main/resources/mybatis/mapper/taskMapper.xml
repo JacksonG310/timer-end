@@ -58,4 +58,19 @@
             updated = #{updated}
         WHERE id = #{taskId} AND creator = #{userId}
     </update>
+    <update id="updateTask" parameterType="HashMap">
+        UPDATE task
+        SET classifyId = #{classifyId},
+            importance = #{importance},
+            updated = #{updated},
+            title = #{title},
+            remark = #{remark},
+            startTime = #{startTime},
+            endTime = #{endTime}
+        WHERE id = #{taskId} AND creator = #{userId}
+    </update>
+    <delete id="deleteTask" parameterType="HashMap">
+        DELETE FROM task
+        WHERE id = #{taskId} AND creator = #{userId}
+    </delete>
 </mapper>

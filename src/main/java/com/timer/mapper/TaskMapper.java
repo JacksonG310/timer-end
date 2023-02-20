@@ -11,5 +11,6 @@ public interface TaskMapper {
     public int addTask(HashMap params);
     public int updateStatus(HashMap params);
     public HashMap findTaskById(HashMap params);
-
+    public int updateTask(HashMap params);
+    public int deleteTask(HashMap params);
 }

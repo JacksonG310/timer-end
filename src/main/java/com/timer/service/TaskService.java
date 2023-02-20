@@ -12,4 +12,7 @@ public interface TaskService {
     public  int updateStatus(HashMap params);
 
     public HashMap findTaskById(HashMap params);
+
+    public int updateTask(HashMap params);
+    public  int deleteTask(HashMap params);
 }

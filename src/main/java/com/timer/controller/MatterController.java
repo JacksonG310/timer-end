@@ -2,10 +2,7 @@ package com.timer.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.json.JSONUtil;
-import com.timer.controller.form.AddTagForm;
-import com.timer.controller.form.AddTaskForm;
-import com.timer.controller.form.UpdateStatusForm;
-import com.timer.controller.form.UpdateTagNameForm;
+import com.timer.controller.form.*;
 import com.timer.service.TaskService;
 import com.timer.service.TodoClassifyService;
 import com.timer.vo.Result;
@@ -70,6 +67,7 @@ public class MatterController {
     private TaskService taskService;
     @PostMapping("/addTask")
     public Result addTask (@RequestBody @Valid AddTaskForm addTaskForm){
+        System.out.println(addTaskForm.toString());
         try {
             HashMap params = JSONUtil.parse(addTaskForm).toBean(HashMap.class);
             int rows = taskService.addTask(params);
@@ -104,7 +102,6 @@ public class MatterController {
                 return Result.error(500,"修改失败");
             }
         }catch (Exception e){
-            System.out.println(e);
             return Result.error(500,"请求出错");
         }
     }
@@ -120,4 +117,34 @@ public class MatterController {
         }
     }
 
+    @PutMapping("/updateTask")
+    public  Result updateTask(@RequestBody UpdateTaskForm updateTaskForm){
+        System.out.println(updateTaskForm.toString());
+        try {
+            HashMap params = JSONUtil.parse(updateTaskForm).toBean(HashMap.class);
+            int rows = taskService.updateTask(params);
+            if(rows == 1){
+                return Result.success("修改成功");
+            }else{
+                return Result.error(500,"修改失败");
+            }
+        }catch (Exception e){
+            System.out.println(e);
+            return Result.error(500,"请求出错");
+        }
+    }
+
+    @DeleteMapping("/deleteTask/{userId}/{taskId}")
+    public Result deleteTask(@RequestParam HashMap params){
+        try {
+            int rows = taskService.deleteTask(params);
+            if(rows == 1){
+                return Result.success("删除成功");
+            }else{
+                return Result.error(500,"删除失败");
+            }
+        }catch (Exception e){
+            return Result.error(500,"删除出错");
+        }
+    }
 }

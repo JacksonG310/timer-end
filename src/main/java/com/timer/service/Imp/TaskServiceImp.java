@@ -31,4 +31,14 @@ public class TaskServiceImp implements TaskService {
     public HashMap findTaskById(HashMap params) {
         return taskMapper.findTaskById(params);
     }
+
+    @Override
+    public int updateTask(HashMap params) {
+        return taskMapper.updateTask(params);
+    }
+
+    @Override
+    public int deleteTask(HashMap params) {
+        return taskMapper.deleteTask(params);
+    }
 }

@@ -30,4 +30,6 @@ public class AddTaskForm {
     private Date from;
     @NotNull
     private Date to;
+    @NotNull
+    private String title;
 }
